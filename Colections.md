@@ -19,10 +19,32 @@ Para sobrescrever o **Equals** deve ser verificado na regra de negócio do objet
 Colções em Java são separadas em duas: **Ordered e Sorted**. Para tirar dúvidas sobre qual coleção utilizar dependendo da operação, pesquisar **Complexidade Big-O Java** no Google que é GG.
 
 ## List
-É uma coleção ordenada. Não é recomendado iterar a lista com for, o melhor é usar o stream() para filtrá-la.
+É uma coleção ordenada. Não é recomendado iterar a lista com for, o melhor é usar o stream() para filtrá-la.  
+Uma ótima forma de inciar uma lista é após instânciado os objetos que vão compo-lá:
 
+        List<Tipo> lista = new Tipo.of(item1,item2,item3);
+
+Um exemplo de lista criada e depois filtrada obtendo uma nova lista com o resultado: 
+
+        List<Lista> lista = new ArrayList<>();
+                lista.add(new Lista(10, "Diego", 10.50));
+                lista.add(new Lista(20, "Marcos", 1.99));
+                lista.add(new Lista(30, "Angélica", 100.00));
+                lista.add(new Lista(40, "Marcelo", 5.50));
+                lista.add(new Lista(50, "Apolo", 99.90));
+                List<Lista> listaFiltrada = lista.stream().filter(x -> x.getId() > 23).collect(Collectors.toList());
+O resultado da nova lista serão os elementos que contêm o Id maior que 23.
 ## Sorting Lists
-Collections.sort ordena a lista podendo ser em ordem numérica ou alfabética. Uma coisa importante é que a classe Objects tem o método requireNonNull() que se usado no construtor e passado um atributo por parâmetro ele garante que aquele atributo não pode ser nulo. 
+Collections.sort ordena a lista podendo ser em ordem numérica ou alfabética. Uma coisa importante é que a classe Objects tem o método requireNonNull() que se usado no construtor e passado um atributo por parâmetro ele garante que aquele atributo não pode ser nulo.  
+**OBS**: A melhor forma de ordenar uma lista e após isso imprimir:
+
+        lista.sort(Comparator.comparing(Lista::getPreço));
+        lista.forEach(System.out::print);
+
+Ou também pode-se se usar a expressão lambda para imprimir um atributo expecífico da lista
+
+        listaFiltrada.forEach(x -> x.getId());
+
 
 ## Ordenar uma lista de Objetos personalizada atraves de Comparable<>  
 * Implementar a interface **Comparable<>**.  
@@ -92,4 +114,23 @@ Passando 0 no tamanho do novo **Array** o desempenho é melhor.
 **NavigableSet**: Interface que faz parte do **Set**, segue as mesmas regras acima. Impementa através da classe **TreeSet**. Normalmente estas classes que tem **Tree** necessitam da implementação da interface **Comparable<>** ou o **Comparator<>** nos objetos que deseja adicionar a esta lista e o **TreeSet** não é diferente pelo fato dele não fazer a comparação utilizando o **Equals** mas sim os métodos dessas interfaces.   
 Na instânciação dos objetos dentro da lista ele já organiza eles conforme o resultado dos métodos de comparações das respectivas interfaces.
 
+## Map, HashMap e LinkedHashMap
+**Map**: Não faz parte das **Collections**, é um interface que recebe uma chave e um valor. Também não podem ter valores duplicados nele.  
+**HashMap**: Ordena os itens conforme o **HashCode**. Se você colocar um valor de chave que já existe ele sobrescreve o valor antigo com o novo, para isso tem o método putIfAbsent() que só adiciona se não tiver outro valor igual.  
+* Values(): Retorna o valor.  
+* Key(): Retorna o valor da chave. 
+* entrySet(): Retorna os dois.
+
+Utilizar a captura dos dois valores iterando:
+
+        for(Map.Entry<Tipo, Tipo> entry : map.entrySet()){
+                System.out.println(entry.getKey() + " -- " +    
+                entry.getValue());
+        }
+
+**LinkedHashMap**: Mantem a ordem na lista conforme os elementos foram adicionados.
+
+**Obs**: Para retornar sempre um Id diferente:  
+
+        Long id = ThreadLocalRandom.current()nextLong(inicio, fim);
 
