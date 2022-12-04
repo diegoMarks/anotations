@@ -37,3 +37,44 @@ Ex:
 
 Soma todos os valores da lista e imprime o resultado. Para evitar um retorno de **Optional** pode-se colocar um valor no reduce indicando o valor de início da operação. 
 **OBS**: Tomar cuidado ao usar o **Reduce**, esse método faz o boxing e unboxing dos elementos e isso pode afetar o desempenho da aplicação. Para evitar isso pode-se usar o mapTo para converter o tipo para um valor específico primitivo, nestes casos usam-se as classes **DoubleStream, IntStream, LongStream**.
+
+## Gerando Streams diretamente
+
+        IntStream.rangedClose(1,50).filter(in -> in % 2 == 0).forEach(in -> System.out.println(in + " "));
+
+Neste exemplo o **rangedClose()** irá filtrar do número 1 até o 50 e imprimir somente os pares. Se fosse usado o **range()** o primeiro e o último número são exclusivos.  
+Gerar Streams de iteração até um ponto definido: _**iterate()** e **generate()**_.  
+
+
+## Summarizing
+Método do **collect()** muito importante, automátiza muitas funcionalidades do código.  
+Ex:  
+
+        String titles = lista.stream().map(lista::getTitle).collect(Collectors.joining(", "));
+
+Este método agrupa String's em uma lista separando por vírgula e leva em conta o último elemento da lista.
+
+        lista.stream().collect(Collectos.summarizingDouble(lista::getPrice));
+
+Este método retorna todas as estátiscas de preço da lista: soma, mínimo, máximo, média.
+
+
+## Grouping by
+Agrupa elementos em um Map.
+
+        Map<Categoty, List<lista>> collect = lista.stream.collect(Collectors.groupingBy(lista::getCategory));
+
+Este código irá separar em um Map as listas baseadas nas suas categorias.  
+Também é possível agrupar vários **groupingBy()**:  
+
+        Map<Category, Map<Promotion, List<lista>>> collect1 = lista.stream()
+        .collect(groupingBy(lista::getCategory,
+        groupingBy(l -> l.getPrice() ? < 6 ? UNDER_PROMOTION : NORMAL_PRICE)));
+
+Este segundo exemplo irá inserir como chave do **Map** a categoria, e após isso será passado como valor um novo **Map** com chave o tipo da promoção e o valor a lista de itens.
+
+Retirar o maior valor de um Collector: 
+
+        Collectors.maxBy(Comparator.comparing(lista::getPrice));
+
+Compara os preços da lista e retorna o maior preço. Se utilizar o **minBy()** será feito o contrário.
